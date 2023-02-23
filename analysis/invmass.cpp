@@ -114,12 +114,11 @@ int invmass(){
 	Bmass_down->DrawClone();
 
 	//Save the files with the new data
-	Bselection_up.Snapshot("DecayTree", "Processed_Up",{"B_PX","B_PY","B_PZ","B_E","invMass","H1_ProbK","H2_ProbK","H3_ProbK",
-	"H1_ProbPi","H2_ProbPi","H3_ProbPi"});
-	Bselection_down.Snapshot("DecayTree", "Processed_Down",{"B_PX","B_PY","B_PZ","B_E","invMass","H1_ProbK","H2_ProbK","H3_ProbK",
-	"H1_ProbPi","H2_ProbPi","H3_ProbPi"});
+	Bselection_up.Snapshot("DecayTree", "processed_Up.root",{"invMass","H1_ProbK","H2_ProbK","H3_ProbK",
+	"H1_ProbPi","H2_ProbPi","H3_ProbPi", "H1_Charge", "H2_Charge","H3_Charge"});
+	Bselection_down.Snapshot("DecayTree", "processed_Down.root",{"invMass","H1_ProbK","H2_ProbK","H3_ProbK",
+	"H1_ProbPi","H2_ProbPi","H3_ProbPi", "H1_Charge", "H2_Charge","H3_Charge"});
 	//print number of events after the filters
-
 	auto rdf_up2 = rdf_up.Filter("!H1_isMuon && !H2_isMuon && !H3_isMuon").Count();
 	auto rdf_down2 = rdf_down.Filter("!H1_isMuon && !H2_isMuon && !H3_isMuon").Count();
 	std::cout << "Magnet UP events: " << rdf_up2.GetValue()  << std::endl;
