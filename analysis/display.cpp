@@ -40,7 +40,12 @@ int display(){
 	p->cd(4);
 	h_downy->DrawClone();
 
-	//Now for particle number 2
+	auto BselectionUp = rdf_up.Define("Bcharge","(H1_Charge + H2_Charge + H3_Charge)");
+	auto BselectionDown = rdf_down.Define("Bcharge","(H1_Charge + H2_Charge + H3_Charge)");
+
+	BselectionUp.Display({"H1_Charge", "H2_Charge","H3_Charge", "Bcharge"},25,10)->Print();
+        BselectionDown.Display({"H1_Charge", "H2_Charge","H3_Charge","Bcharge"},25,10)->Print();
+
 
 	//look at the histogram
 	auto h1_upx = rdf_up.Histo1D({"h_upx","First particle px",64u,-range,range},"H2_PX");
@@ -67,6 +72,4 @@ int display(){
 	p1->cd(4);
 	h1_downy->DrawClone();
 	return 0;
-
-	// Now display Pz
 }
