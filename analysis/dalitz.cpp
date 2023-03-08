@@ -87,30 +87,30 @@ int dalitz(){
 				.Define("m12", mxy ,{"B_PX","B_PY", "B_PZ", "B_E", "H3_PX","H3_PY","H3_PZ", "H3_E"})
 				.Define("m23", mxy ,{"B_PX","B_PY", "B_PZ", "B_E", "H1_PX","H1_PY","H1_PZ", "H1_E"})
 				.Define("m13", mxy, {"B_PX","B_PY", "B_PZ", "B_E", "H2_PX","H2_PY","H2_PZ", "H2_E"})
-				.Define("mkk","TMath::Sqrt(m23)");
+				.Define("m12r","TMath::Sqrt(m12)")
+				.Define("m13r","TMath::Sqrt(m13)")
+				.Define("m23r","TMath::Sqrt(m23)");
 
 	auto dalitz_down = mass_down_selection
                                 .Define("m12", mxy ,{"B_PX","B_PY", "B_PZ", "B_E", "H3_PX","H3_PY","H3_PZ", "H3_E"})
                                 .Define("m23", mxy ,{"B_PX","B_PY", "B_PZ", "B_E", "H1_PX","H1_PY","H1_PZ", "H1_E"})
                                 .Define("m13", mxy, {"B_PX","B_PY", "B_PZ", "B_E", "H2_PX","H2_PY","H2_PZ", "H2_E"})
-				.Define("mkk","TMath::Sqrt(m23)");
+				.Define("m12r","TMath::Sqrt(m12)")
+				.Define("m13r","TMath::Sqrt(m13)")
+				.Define("m23r","TMath::Sqrt(m23)");
 
-	//auto dalitz_up = invariant_up.Filter("Bcharge == +1");
-	//auto dalitz_down = invariant_down.Filter("Bcharge == +1");
-	//auto dalitz_up_neg = invariant_up.Filter("Bcharge == -1");
-	//auto dalitz_down_neg = invariant_down.Filter("Bcharge == -1");
 
 	//B+ -> K+ K+ K-
 	//Now produce the Dalitz plot to study the decay of the B+/- particles
-
 	auto histUp = Pselect_up.Histo1D({"mass B","B mass",128u,4900,6900},"invMass");
 	auto histDown = Pselect_down.Histo1D({"mass B","B mass",128u,4900,6900},"invMass");
+	//histUp->Add(histDown.GetPtr(),1);
 
 	// ro --> k+ k+
 	auto hist_m23_up   = dalitz_up.Filter("Bcharge == 1").Histo1D({"mm","K1 K2 invariant mass", 128u, 50e3, 30e6},"m23");
 	auto hist_m23_down = dalitz_down.Filter("Bcharge == 1").Histo1D({"mm","K1 K2 invariant mass", 128u, 50e3, 30e6},"m23");
-	auto hist_m12_up   = dalitz_up.Filter("Bcharge == 1").Histo1D({"","",128u,0,40e6},"m12");
-	auto hist_m12_down = dalitz_down.Filter("Bcharge == 1").Histo1D({"","",128u,0,40e6},"m12");
+	auto hist_m12_up   = dalitz_up.Filter("Bcharge == 1").Histo1D({"","",128u,0,23e6},"m12");
+	auto hist_m12_down = dalitz_down.Filter("Bcharge == 1").Histo1D({"","",128u,0,23e6},"m12");
 	auto hist_m13_up   = dalitz_up.Filter("Bcharge == 1").Histo1D({"","",128u,0,30e6},"m13");
 	auto hist_m13_down = dalitz_down.Filter("Bcharge == 1").Histo1D({"","",128u,0,30e6},"m13");
 
@@ -125,13 +125,21 @@ int dalitz(){
 	//dalitz_up.Display({"H1_Charge", "H2_Charge","H3_Charge","Bcharge","m12", "m23", "m13","invMass"},5,10)->Print();
 
 	//B- -> K+  K- K-
+	//auto hist_m23_up_neg = dalitz_up.Filter("Bcharge == -1").Histo1D({"hist_m23_up_neg","K- K- invariant mass", 128u, 50e3, 30e6},"m23");
+	//auto hist_m23_down_neg = dalitz_down.Filter("Bcharge == -1").Histo1D({"hist_m23_down_neg","K- K- invariant mass", 128u, 50e3, 30e6},"m23");
+	auto hist_m23_up_neg = dalitz_up.Filter("Bcharge == -1").Histo1D({"hist_m23_up_neg","K- K- invariant mass", 128u, 0.95e3, 5.5e3},"m23r");
+	auto hist_m23_down_neg = dalitz_down.Filter("Bcharge == -1").Histo1D({"hist_m23_down_neg","K- K- invariant mass", 128u, 0.95e3, 5.5e3},"m23r");
 
-	auto hist_m23_up_neg = dalitz_up.Filter("Bcharge == -1").Histo1D({"mm","K- K- invariant mass", 128u, 50e3, 30e6},"m23");
-	auto hist_m23_down_neg = dalitz_down.Filter("Bcharge == -1").Histo1D({"mm","K- K- invariant mass", 128u, 50e3, 30e6},"m23");
-	auto hist_m12_up_neg = dalitz_up.Filter("Bcharge == -1").Histo1D({"","",128u,0,40e6},"m12");
-	auto hist_m12_down_neg = dalitz_down.Filter("Bcharge == -1").Histo1D({"","",128u,0,40e6},"m12");
-	auto hist_m13_up_neg = dalitz_up.Filter("Bcharge == -1").Histo1D({"","",128u,0,30e6},"m13");
-	auto hist_m13_down_neg = dalitz_down.Filter("Bcharge == -1").Histo1D({"","",128u,0,30e6},"m13");
+	//auto hist_m12_up_neg = dalitz_up.Filter("Bcharge == -1").Histo1D({"hist_m12_up_neg","",128u,0,23e6},"m12");
+	//auto hist_m12_down_neg = dalitz_down.Filter("Bcharge == -1").Histo1D({"hist_m12_down_neg","",128u,0,23e6},"m12");
+	auto hist_m12_up_neg = dalitz_up.Filter("Bcharge == -1").Histo1D({"hist_m12_up_neg","",128u,0.90e3,4.8e3},"m12r");
+	auto hist_m12_down_neg = dalitz_down.Filter("Bcharge == -1").Histo1D({"hist_m12_down_neg","",128u,0.90e3,4.8e3},"m12r");
+
+
+	//auto hist_m13_up_neg = dalitz_up.Filter("Bcharge == -1").Histo1D({"hist_m13_up_neg","",128u,0,30e6},"m13");
+	//auto hist_m13_down_neg = dalitz_down.Filter("Bcharge == -1").Histo1D({"hist_m13_down_neg","",128u,0,30e6},"m13");
+	auto hist_m13_up_neg = dalitz_up.Filter("Bcharge == -1").Histo1D({"hist_m13_up_neg","",128u,1e3,5.47e3},"m13r");
+	auto hist_m13_down_neg = dalitz_down.Filter("Bcharge == -1").Histo1D({"hist_m13_down_neg","",128u,1e3,5.47e3},"m13r");
 
 	std::cout<< "Entries H1 == +1 up: " << hist_m23_up_neg->GetEntries() << std::endl;
 	std::cout<< "Entries H1 == +1 down: " << hist_m23_down_neg->GetEntries() << std::endl;
@@ -144,10 +152,17 @@ int dalitz(){
 	//Plots and histograms
 
 	//invariant mass
-	//auto a = TCanvas("a","Meson B recostructed mass",900,900);
+	auto mass = new TCanvas("mass", "mass", 900, 900);
+	auto k = new TPad("k","k",0,0,1,1);
+	k->Divide(2,2,0.02,0.02);
+	k->Draw();
+	k->cd(1);
+	histDown->GetYaxis->SetTitle("counts for magnet DOWN");
 	histDown->SetLineColor(2);
 	histDown->DrawClone();
-	histUp->DrawClone("same");
+	k->cd(2);
+	hist->GetYaxis->SetTitle("counts for magnet UP");
+	histUp->DrawClone();
 
 	auto c = new TCanvas("c","c",900,900);
 	auto p = new TPad("p","p",0,0,1,1);
@@ -213,22 +228,36 @@ int dalitz(){
 	f->Draw();
 
 	f->cd(1);
-	hist_m12_up_neg->GetXaxis()->SetTitle(" m12 [MeV**2] ");
+	hist_m12_up_neg->GetXaxis()->SetTitle(" m_{12} (k+ k-)[MeV] ");
 	hist_m12_up_neg->SetLineColor(1);
 	hist_m12_up_neg->DrawClone();
 	hist_m12_down_neg->SetLineColor(2);
 	hist_m12_down_neg->DrawClone("same");
 
+	auto legend3 = new TLegend(0.1,0.7,0.48,0.9);
+	legend3->SetHeader("m_{12} histogram");
+	legend3->AddEntry("hist_m12_up_neg","m_{12} MAGNET UP", "l");
+	legend3->AddEntry("hist_m12_down_neg","m_{12} MAGNET DOWN", "l");
+	legend3->SetTextSize(0.03);
+	legend3->Draw();
+
 	f->cd(2);
-	hist_m13_up_neg->GetXaxis()->SetTitle(" m13 [MeV**2] ");
+	hist_m13_up_neg->GetXaxis()->SetTitle(" m_{13} (k+ k-)[MeV] ");
 	hist_m13_up_neg->SetLineColor(1);
 	hist_m13_up_neg->DrawClone();
 	hist_m13_down_neg->SetLineColor(2);
 	hist_m13_down_neg->DrawClone("same");
 
+	auto legend4 = new TLegend(0.1,0.7,0.48,0.9);
+	legend4->SetHeader("m_{13} histogram");
+	legend4->AddEntry("hist_m13_up_neg","m_{13} MAGNET UP", "l");
+	legend4->AddEntry("hist_m13_down_neg","m_{13} MAGNET DOWN", "l");
+	legend4->SetTextSize(0.03);
+	legend4->Draw();
+
 	f->cd(3);
 	//m23 invariant mass
-	hist_m23_down_neg->GetXaxis()->SetTitle(" m23 [MeV**2] ");
+	hist_m23_down_neg->GetXaxis()->SetTitle(" m23 (k- k-)[MeV] ");
 	hist_m23_down_neg->SetLineColor(2);
 	hist_m23_down_neg->DrawClone();
 	hist_m23_up_neg->SetLineColor(1);
@@ -242,11 +271,25 @@ int dalitz(){
 				.Define("roHigh", " std::max(m13,m12) ");
 
 
-	auto hist_Rolow = ordered_up.Filter("Bcharge == 1").Histo1D({"","",20u,0.8e6,28e5},"roLow");
-	auto hist_Rolow_neg = ordered_up.Filter("Bcharge == -1").Histo1D({"","",20u,0.8e6,28e5},"roLow");
+/*	auto ordered_up = dalitz_up.Define("roLow" , " std::min(m23,m12) ")
+				.Define("roHigh", " std::max(m23,m12) ");
+	auto ordered_down = dalitz_down.Define("roLow" , " std::min(m23,m12) ")
+				.Define("roHigh", " std::max(m23,m12) ");
+*/
 
-	auto hist_RoHigh = ordered_up.Filter("Bcharge == 1").Histo1D({"","",26u, 2e6, 15e6},"roHigh");
-	auto hist_RoHigh_neg = ordered_up.Filter("Bcharge == -1").Histo1D({"","",26u, 2e6, 15e6},"roHigh");
+	auto Rolow = ordered_up.Filter("Bcharge == 1").Histo1D({"Rolow","",20u,0.8e6,28e5},"roLow");
+	auto Rolow_neg = ordered_up.Filter("Bcharge == -1").Histo1D({"Rolow_neg","",20u,0.8e6,28e5},"roLow");
+	auto aa = ordered_down.Filter("Bcharge == 1").Histo1D({"","",20u,0.8e6,28e5},"roLow");
+	auto bb = ordered_down.Filter("Bcharge == -1").Histo1D({"","",20u,0.8e6,28e5},"roLow");
+
+	Rolow->Add(aa.GetPtr(),1); Rolow_neg->Add(bb.GetPtr(),1);
+
+	auto RoHigh = ordered_up.Filter("Bcharge == 1").Histo1D({"RoHigh","",26u, 2e6, 15e6},"roHigh");
+	auto RoHigh_neg = ordered_up.Filter("Bcharge == -1").Histo1D({"RoHigh_neg","",26u, 2e6, 15e6},"roHigh");
+	auto cc = ordered_down.Filter("Bcharge == 1").Histo1D({"","",26u,2e6,15e6},"roHigh");
+	auto dd = ordered_down.Filter("Bcharge == -1").Histo1D({"","",26u,2e6,15e6},"roHigh");
+
+	RoHigh->Add(cc.GetPtr(),1); RoHigh_neg->Add(dd.GetPtr(),1);
 	//ordered_up.Display({"m13","m12","roHigh", "roLow"})->Print();
 
 	auto ordGraph_up = ordered_up.Filter("Bcharge == 1").Graph("roLow","roHigh");
@@ -261,16 +304,32 @@ int dalitz(){
 	h->Draw();
 	h->cd(1);
 	//histogram K+k- (Low)
-	hist_Rolow_neg->SetLineColor(2);
-	hist_Rolow_neg->DrawClone();
-	hist_Rolow->SetLineColor(1);
-	hist_Rolow->DrawClone("same");
+	Rolow_neg->SetLineColor(kRed);
+	Rolow_neg->DrawClone();
+	Rolow->SetLineColor(kBlack);
+	Rolow->DrawClone("same");
+
+	auto legend1 = new TLegend(0.1,0.7,0.48,0.9);
+	legend1->SetHeader("#rho_{low} histogram");
+	legend1->AddEntry("Rolow","#rho_{low} from B +", "l");
+	legend1->AddEntry("Rolow_neg", "#rho_{low} from B -", "l");
+	legend1->SetTextSize(0.03);
+	legend1->Draw();
+
 	h->cd(2);
 	//histogram K+K- (High)
-	hist_RoHigh->SetLineColor(1);
-	hist_RoHigh->DrawClone();
-	hist_RoHigh_neg->SetLineColor(2);
-	hist_RoHigh_neg->DrawClone("same");
+	RoHigh->SetLineColor(kBlack);
+	RoHigh->DrawClone();
+	RoHigh_neg->SetLineColor(kRed);
+	RoHigh_neg->DrawClone("same");
+
+	auto legend2 = new TLegend(0.1,0.7,0.48,0.9);
+	legend2->SetHeader("#rho_{high} histogram");
+	legend2->AddEntry("RoHigh","#rho_{high} from B+", "l");
+	legend2->AddEntry("RoHigh_neg","#rho_{high} from B-", "l");
+	legend2->SetTextSize(0.03);
+	legend2->Draw();
+
 	h->cd(3);
 	ordGraph_up->SetTitle(" Orderer dalitz k- k+ k+ magnet UP; invariant K+K- (Low); K+K- (High) ");
 	ordGraph_up->DrawClone("AP");
