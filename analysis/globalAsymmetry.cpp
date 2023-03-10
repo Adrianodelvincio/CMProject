@@ -101,10 +101,16 @@ int globalAsymmetry(){
 	//Now fit the invariant mass of the B meson
 	//Use the cristal ball function to fit the mass!!!
 	gInterpreter->GenerateDictionary("Functions", "fit.h");
-	TF1 *func = new TF1("fit_Bmass",/*Cruijff*/,5200,5400,6);
+	TF1 *func1 = new TF1("fit_Bmass", Cruijff,4700,6400,6);
+	TF1 *func2 = new TF1("fit_Bmass2",CrystallBall,4700,6400,5);
+	TF1 *func3 = new TF1("fit_Bmass3",fourBodybackground,4700,6400,5);
 	//set the initial values
-	func->SetParameters(histUp->GetRMS(),histUp->GetRMS(),histUp->GetMean(),0,0,100);
-	func->SetParNames("sigma_L", "sigma_R", "mean", "alpha_L", "alpha_R", "costant");
+	func1->SetParameters(histUp->GetRMS(),histUp->GetRMS(),histUp->GetMean(),0,0,100);
+	func1->SetParNames("sigma_L", "sigma_R", "mean", "alpha_L", "alpha_R", "norm");
+	func2->SetParameters(1,2,histUp->GetRMS(),histUp->GetMean(),500);
+	func2->SetParNames("alpha","n","sigma","mean","norm");
+	func3->SetParameters(900,10,1,5000,1e-5);
+	func3->SetParNames("m0","c","p");
 
 	//Now remove the event above and below the invariant mass recostructed, and select B+ B-
 	// it's important to define a way to select a good range
@@ -127,19 +133,20 @@ int globalAsymmetry(){
 
 	p->cd(1);
 	gStyle->SetOptStat(0);
-	histUp->Fit("fit_Bmass","L","same",5200,5400);
+	histUp->Fit("fit_Bmass3","L","same",5000,5200);
 	gStyle->SetOptFit(1);
 	histUp->DrawClone();
+	//func3->DrawClone();
 	p->cd(2);
 	gStyle->SetOptStat(0);
-	histDown->Fit("fit_Bmass","L","same",5200,5400);
+	histDown->Fit("fit_Bmass3","L","same",5000,5200);
 	gStyle->SetOptFit(1);
 	histDown->DrawClone();
 
-	auto e = new TCanvas("e","Invariant mass B+/B-",900,900);
-        auto f = new TPad("f","f",0,0,1,1);
-        f->Divide(2,2,0.01,0.01);
-        f->Draw();
+	//auto e = new TCanvas("e","Invariant mass B+/B-",900,900);
+        //auto f = new TPad("f","f",0,0,1,1);
+        //f->Divide(2,2,0.01,0.01);
+        //f->Draw();
 
 	//Identify B+ and B- by the kaon charge
 
@@ -148,8 +155,8 @@ int globalAsymmetry(){
 	auto histBpos2 = mass_down_selection.Filter("Bcharge == 1").Histo1D({"histB3","recostructed Mass B+ meson",128u,4900,6900},"invMass");
 	auto histBneg2 = mass_down_selection.Filter("Bcharge == -1").Histo1D({"histB4","recostructed Mass B- meson",128u,4900,6900},"invMass");
 
-	f->cd(1); histBpos1->DrawClone();
-	f->cd(2); histBneg1->DrawClone();
+	//f->cd(1); histBpos1->DrawClone();
+	//f->cd(2); histBneg1->DrawClone();
 
 	auto positiveBup = histBpos1->GetEntries();
 	auto negBup = histBneg1->GetEntries();
