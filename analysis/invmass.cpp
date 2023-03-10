@@ -2,19 +2,6 @@
 #include <Math/Vector4D.h>
 
 
-double Cruijff(double *x, double *par){
-	double arg = 0;
-	double arg2 = (x[0] - par[3]);
-	if (par[1] != 0 && par != 0){
-		if( arg2 <= 0){
-			arg = TMath::Exp(TMath::Power(arg2,2) / (2*par[1]*par[1] + par[4] *TMath::Power(arg2,2)));
-		}
-		else{
-			arg = TMath::Exp(TMath::Power(arg2,2) / (2*par[2]*par[2] + par[5] *TMath::Power(arg2,2)));
-		}
-	}
-	return arg;
-}
 
 int invmass(){
         //load the two datafile

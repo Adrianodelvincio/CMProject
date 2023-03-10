@@ -1,24 +1,12 @@
 #include <iostream>
 #include <Math/Vector4D.h>
+#include "fit.h"
 
-double Cruijff(double *x, double *par){
-        double arg = 0;
-        double arg2 = (x[0] - par[3]);
-        if (par[1] != 0 && par != 0){
-                if( arg2 <= 0){
-                        arg = TMath::Exp(TMath::Power(arg2,2) / (2*par[1]*par[1] + par[4] *TMath::Power(arg2,2)));
-                }
-                else{
-                        arg = TMath::Exp(TMath::Power(arg2,2) / (2*par[2]*par[2] + par[5] *TMath::Power(arg2,2)));
-                }
-        }
-        return arg;
-}
 
 int globalAsymmetry(){
         //load the two datafile
-        auto fileDown = "processed_Down.root";
-        auto fileUp = "processed_Up.root";
+        auto fileDown = "../processed_Down.root";
+        auto fileUp = "../processed_Up.root";
 
         ROOT::RDataFrame rdf_up("DecayTree", fileUp);
         ROOT::RDataFrame rdf_down("DecayTree", fileDown);
@@ -62,7 +50,7 @@ int globalAsymmetry(){
 	auto downKaon1 = rdf_up.Histo1D({"Pion","Prob. is pion",128u,0.,1.},"H1_ProbPi");
 	auto downKaon2 = rdf_up.Histo1D({"Pion","Prob. is pion",128u,0.,1.},"H2_ProbPi");
 	auto downKaon3 = rdf_up.Histo1D({"Pion","Prob. is pion",128u,0.,1.},"H3_ProbPi");
-
+	/*
 	auto b = new TCanvas("b", "b", 900, 900);
 	auto d = new TPad("d","d",0,0,1,1);
 	d->Draw();
@@ -76,6 +64,7 @@ int globalAsymmetry(){
 	downKaon1->DrawClone("PLC");
 	downKaon2->DrawClone("same PLC");
 	downKaon3->DrawClone("same PLC");
+	*/
 
 	//Now select the kaon event and plot invariant mass after the selection
 	auto selectUp = rdf_up.Filter("H1_ProbPi <= 0.5")
@@ -106,11 +95,16 @@ int globalAsymmetry(){
 	.Filter("H2_ProbK >= 0.5")
 	.Filter("H3_ProbK >= 0.5");
 
-	auto histUp = selectUp.Histo1D({"mass B","B mass",128u,4900,6900},"invMass");
-	auto histDown = selectDown.Histo1D({"mass B","B mass",128u,4900,6900},"invMass");
-	// try stronger selection
-	auto histUp1 = selectUp1.Histo1D({"mass B","B mass",128u,4900,6900},"invMass");
-	auto histDown1 = selectDown1.Histo1D({"mass B","B mass",128u,4900,6900},"invMass");
+	auto histUp = selectUp.Histo1D({"Bup","B mass",128u,4700,6400},"invMass");
+	auto histDown = selectDown.Histo1D({"Bdown","B mass",128u,4700,6400},"invMass");
+
+	//Now fit the invariant mass of the B meson
+	//Use the cristal ball function to fit the mass!!!
+	gInterpreter->GenerateDictionary("Functions", "fit.h");
+	TF1 *func = new TF1("fit_Bmass",/*Cruijff*/,5200,5400,6);
+	//set the initial values
+	func->SetParameters(histUp->GetRMS(),histUp->GetRMS(),histUp->GetMean(),0,0,100);
+	func->SetParNames("sigma_L", "sigma_R", "mean", "alpha_L", "alpha_R", "costant");
 
 	//Now remove the event above and below the invariant mass recostructed, and select B+ B-
 	// it's important to define a way to select a good range
@@ -123,35 +117,37 @@ int globalAsymmetry(){
 				.Filter("invMass >= 5279.15 - 100")
 				.Define("Bcharge","(H1_Charge + H2_Charge + H3_Charge)");
 
-	auto histUp2 = mass_up_selection.Histo1D({"mass B","B mass",128u,4900,6900},"invMass");
-	auto histDown2 = mass_down_selection.Histo1D({"mass B","B mass",128u,4900,6900},"invMass");
-	//Fit to the B meson mass
+	//PLOTS
 
-	auto c = new TCanvas("c","c",900,900);
+	auto c = new TCanvas("c","Invariant mass B meson",900,900);
 	auto p = new TPad("p","p",0,0,1,1);
-	p->Divide(2,2,0.01,0.01);
+
+	p->Divide(2,1,0.02,0.02);
 	p->Draw();
-	p->cd(1); histUp->DrawClone("PLC");
-	histUp1->DrawClone("same PLC");
-	p->cd(2); histDown->DrawClone("PLC");
-	histDown1->DrawClone("same PLC");
-	p->cd(3);
-	histUp2->DrawClone();
-	p->cd(4);
-	histDown2->DrawClone();
+
+	p->cd(1);
+	gStyle->SetOptStat(0);
+	histUp->Fit("fit_Bmass","L","same",5200,5400);
+	gStyle->SetOptFit(1);
+	histUp->DrawClone();
+	p->cd(2);
+	gStyle->SetOptStat(0);
+	histDown->Fit("fit_Bmass","L","same",5200,5400);
+	gStyle->SetOptFit(1);
+	histDown->DrawClone();
+
+	auto e = new TCanvas("e","Invariant mass B+/B-",900,900);
+        auto f = new TPad("f","f",0,0,1,1);
+        f->Divide(2,2,0.01,0.01);
+        f->Draw();
 
 	//Identify B+ and B- by the kaon charge
 
-	auto histBpos1 = mass_up_selection.Filter("Bcharge == 1").Histo1D({"histB","recostructed Mass B+ meson",128u,4900,6900},"invMass");
-	auto histBneg1 = mass_up_selection.Filter("Bcharge == -1").Histo1D({"histB","recostructed Mass B- meson",128u,4900,6900},"invMass");
-	auto histBpos2 = mass_down_selection.Filter("Bcharge == 1").Histo1D({"histB","recostructed Mass B+ meson",128u,4900,6900},"invMass");
-	auto histBneg2 = mass_down_selection.Filter("Bcharge == -1").Histo1D({"histB","recostructed Mass B- meson",128u,4900,6900},"invMass");
+	auto histBpos1 = mass_up_selection.Filter("Bcharge == 1").Histo1D({"histB1","recostructed Mass B+ meson",128u,4900,6900},"invMass");
+	auto histBneg1 = mass_up_selection.Filter("Bcharge == -1").Histo1D({"histB2","recostructed Mass B- meson",128u,4900,6900},"invMass");
+	auto histBpos2 = mass_down_selection.Filter("Bcharge == 1").Histo1D({"histB3","recostructed Mass B+ meson",128u,4900,6900},"invMass");
+	auto histBneg2 = mass_down_selection.Filter("Bcharge == -1").Histo1D({"histB4","recostructed Mass B- meson",128u,4900,6900},"invMass");
 
-
-	auto e = new TCanvas("e","e",900,900);
-	auto f = new TPad("f","f",0,0,1,1);
-	f->Divide(2,2,0.01,0.01);
-	f->Draw();
 	f->cd(1); histBpos1->DrawClone();
 	f->cd(2); histBneg1->DrawClone();
 
