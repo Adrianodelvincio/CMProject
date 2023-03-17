@@ -5,8 +5,8 @@
 
 int globalAsymmetry(){
         //load the two datafile
-        auto fileDown = "../processed_Down.root";
-        auto fileUp = "../processed_Up.root";
+        auto fileDown = "processed_Down.root";
+        auto fileUp = "processed_Up.root";
 
         ROOT::RDataFrame rdf_up("DecayTree", fileUp);
         ROOT::RDataFrame rdf_down("DecayTree", fileDown);
@@ -38,9 +38,6 @@ int globalAsymmetry(){
 	auto pifilterDown = SelectionDown.GetValue();
 	std::cout << "After Pi filter magnet UP: " << pifilterUp << std::endl;
 	std::cout << "After Pi filter magnet DOWN: " << pifilterDown << std::endl;
-	auto lost = [](int total, int final ){ return (float) final/total;};
-	std::cout << "Events lost Magnet UP: " << 1 - lost(entriesUp,pifilterUp) << std::endl;
-	std::cout << "Events lost Magnet DOWN: " << 1 - lost(entriesDown,pifilterDown) << std::endl;
 
 	//plot the probabilities
 	auto upKaon1 = rdf_up.Histo1D({"Pion","Prob. is pion",128u,0.,1.},"H1_ProbPi");
@@ -99,21 +96,101 @@ int globalAsymmetry(){
 	auto histDown = selectDown.Histo1D({"Bdown","B mass",128u,4700,6400},"invMass");
 
 	//Now fit the invariant mass of the B meson
-	//Use the cristal ball function to fit the mass!!!
-	gInterpreter->GenerateDictionary("Functions", "fit.h");
-	TF1 *func1 = new TF1("fit_Bmass", Cruijff,4700,6400,6);
-	TF1 *func2 = new TF1("fit_Bmass2",CrystallBall,4700,6400,5);
-	TF1 *func3 = new TF1("fit_Bmass3",fourBodybackground,4700,6400,5);
+
+	//Use the cristal ball/cruijff function as a model
+	gInterpreter->GenerateDictionary("Functions", "analysis/fit.h");
+	TF1 *func1 = new TF1("fit_Bmass", Cruijff,5000,5400,6);
+	TF1 *func2 = new TF1("4body",fourBodybackground,5039,5300,5);
+	TF1 *f = new TF1("Model",model,5000,6400,13);
 	//set the initial values
-	func1->SetParameters(histUp->GetRMS(),histUp->GetRMS(),histUp->GetMean(),0,0,100);
-	func1->SetParNames("sigma_L", "sigma_R", "mean", "alpha_L", "alpha_R", "norm");
-	func2->SetParameters(1,2,histUp->GetRMS(),histUp->GetMean(),500);
-	func2->SetParNames("alpha","n","sigma","mean","norm");
-	func3->SetParameters(900,10,1,5000,1e-5);
-	func3->SetParNames("m0","c","p");
+	func1->SetParNames("sigma_L", "sigma_R", "mean", "alpha_L", "alpha_R", "Norm");
+	func2->SetParNames("m0","c","p","leftBoundary","Norm");
+	f->SetParNames("#sigma_{L}", "#sigma_{R}", "mean", "#alpha_{L}", "#alpha_{R}", "N_{Cruijff}","m_{0}","c","p","leftBoundary","N_{4b}");
+	f->SetLineStyle(1);
+	f->SetLineColor(kRed);
+	Double_t params[13] = {18.61,12.32,5288,0.0988,0.2111,1900,1.524e04,15.08,1.861e04,5008,0.6e-06,0.0006,50};
+	f->SetParameters(params);
+
+	TF1 *fexp = new TF1("fexp", "[0]*TMath::Exp(-[1]*(x-5000))",5038,6400);
+	fexp->SetParNames("norm","lambda");
 
 	//Now remove the event above and below the invariant mass recostructed, and select B+ B-
-	// it's important to define a way to select a good range
+	//f->FixParameter();
+
+	//PLOTS
+	auto c = new TCanvas("c","Invariant mass B meson",1100,900);
+	auto p = new TPad("p","p",0,0,1,1);
+	p->Divide(2,1,0.02,0.02);
+	p->Draw();
+
+	p->cd(1);
+	gStyle->SetOptStat(0);
+	gStyle->SetOptFit(1);
+
+	histUp->Fit("Model","","same",5035,6300);
+	histUp->DrawClone("same");
+	histUp->DrawClone("E1 X0 same");
+
+	TF1 *fitUp = histUp->GetFunction("Model");
+
+	double p0 = fitUp->GetParameter(0);
+	double p1 = fitUp->GetParameter(1);
+	double p2 = fitUp->GetParameter(2);
+	double p3 = fitUp->GetParameter(3);
+	double p4 = fitUp->GetParameter(4);
+	double p5 = fitUp->GetParameter(5);
+	func1->SetParameters(p0,p1,p2,p3,p4,p5);
+	func1->SetLineColor(kBlue);
+	func1->SetLineStyle(2);
+	func1->Draw("same");
+
+	double p6 = fitUp->GetParameter(6);
+	double p7 = fitUp->GetParameter(7);
+	double p8 = fitUp->GetParameter(8);
+	double p9 = fitUp->GetParameter(9);
+	double p10 = fitUp->GetParameter(10);
+	func2->SetParameters(p6,p7,p8,p9,p10);
+	func2->SetLineColor(kGreen);
+	func2->SetLineStyle(2);
+	func2->Draw("same");
+
+	double p11 = fitUp->GetParameter(11);
+	double p12 = fitUp->GetParameter(12);
+	fexp->SetParameters(p12,p11);
+	fexp->SetLineColorAlpha(kOrange,1);
+	fexp->SetLineStyle(2);
+	fexp->DrawClone("same");
+	/*
+	func1->SetParameters(18.61,12.32,5288,0.0988,9.88345e-02,1900);
+        func1->SetLineColor(kBlue);
+        func1->SetLineStyle(1);
+        func1->DrawClone("same");
+	func2->SetParameters(1.524e04,15.08,1.861e04,5008,0.6e-06);
+        func2->SetLineColor(kGreen);
+        func2->SetLineStyle(1);
+        func2->DrawClone("same");
+	fexp->SetParameters(50,6.07721e-04);
+        fexp->SetLineColorAlpha(kBlack,1);
+        fexp->SetLineStyle(1);
+        fexp->DrawClone("same");*/
+	p->cd(2);
+
+	//Double_t params_dw[13] = {1.69715e+01, 1.60683e+01, 5.28488e+03, 1.12166e-01, 9.61372e-02, 2.70819e+03, 1.31128e+04, 1.53456e+01, 2.64010e+04, 5.03026e+03, 1.11330e-06, 50, 0.0006 };
+	//f->SetParameters(params_dw);
+	gStyle->SetOptStat(0);
+	gStyle->SetOptFit(1);
+	histDown->Fit("Model","","same",5035,6300);
+	histDown->DrawClone();
+	histDown->DrawClone("E1 X0 same");
+	TF1 *fitDw = histDown->GetFunction("Model");
+        double pp11 = fitDw->GetParameter(11);
+        double pp12 = fitDw->GetParameter(12);
+        fexp->SetParameters(pp12,pp11);
+        fexp->SetLineColorAlpha(kOrange,1);
+        fexp->SetLineStyle(2);
+        fexp->DrawClone("same");
+
+
 	double mesonBmass = 5279.15; // MeV/c^2
 
 	auto mass_up_selection = selectUp.Filter("invMass <= 5279.15 + 100")
@@ -122,26 +199,6 @@ int globalAsymmetry(){
 	auto mass_down_selection = selectDown.Filter("invMass <= 5279.15 + 100")
 				.Filter("invMass >= 5279.15 - 100")
 				.Define("Bcharge","(H1_Charge + H2_Charge + H3_Charge)");
-
-	//PLOTS
-
-	auto c = new TCanvas("c","Invariant mass B meson",900,900);
-	auto p = new TPad("p","p",0,0,1,1);
-
-	p->Divide(2,1,0.02,0.02);
-	p->Draw();
-
-	p->cd(1);
-	gStyle->SetOptStat(0);
-	histUp->Fit("fit_Bmass3","L","same",5000,5200);
-	gStyle->SetOptFit(1);
-	histUp->DrawClone();
-	//func3->DrawClone();
-	p->cd(2);
-	gStyle->SetOptStat(0);
-	histDown->Fit("fit_Bmass3","L","same",5000,5200);
-	gStyle->SetOptFit(1);
-	histDown->DrawClone();
 
 	//auto e = new TCanvas("e","Invariant mass B+/B-",900,900);
         //auto f = new TPad("f","f",0,0,1,1);

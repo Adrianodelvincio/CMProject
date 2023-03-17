@@ -31,10 +31,14 @@ nrohigh = np.concatenate((nhighup,nhighdw),axis=None)
 print("total number of event B+ : " , len(rolow), " total number of event B- : " , len(nrolow))
 #now we create a 2d histogram
 xbinning = 10
-ybinning = 15
-#Better to specify the bin edges manually
+ybinning = 14
+
+#define the minimum statistics required for each bin from the formula of the error of the asymmetry
+sigma_expected = 10/100 # max error percentage required for each bin
+Nmin = int(1/(2*sigma_expected**2))
+print("Minimum statistics for each bin : %d" % Nmin )
 Base = 6
-Cmin = 30
+Cmin = Nmin
 rolow = rolow/1e6 ; nrolow = nrolow/1e6 ; rohigh = rohigh/1e6 ; nrohigh = nrohigh/1e6
 
 xmin = min(rolow)
@@ -60,7 +64,7 @@ plt.title(r"Matter $\rho_{low}$ vs $\rho_{high}$ ")
 matter, xedges, yedges, Image = plt.hist2d(rolow,rohigh, bins = [edge_x,edge_y], alpha = 0.5, cmin = Cmin)
 plt.xlabel(r'$\rho_{low}$')
 plt.ylabel(r'$\rho_{high}$')
-plt.close()
+
 
 plt.figure(2)
 plt.title(r"antiMatter $\rho_{low}$ vs $\rho_{high}$ ")
@@ -68,7 +72,6 @@ antimatter, xedges, yedges, Image = plt.hist2d(nrolow,nrohigh, bins = [edge_x,ed
 plt.xlabel(r'$\rho_{low}$')
 plt.ylabel(r'$\rho_{high}$')
 plt.colorbar()
-plt.close()
 
 plt.figure(3)
 plt.errorbar(rolow,rohigh,linestyle = '', marker = '.', markersize = 0.5, color = "black")
@@ -76,10 +79,9 @@ plt.errorbar(nrolow,nrohigh, linestyle = '', marker = '.', markersize = 0.5, col
 
 plt.figure(4)
 plt.title(r"$\rho_{low}$")
-plt.hist(rolow, bins = 20)
+plt.hist(rolow, bins = 20, histtype = 'step')
 #now we can compute the asymmetry in the following way:
 asymmetry = np.zeros(matter.shape)
-
 
 #Mask for the bins with zero asymmetry
 sum = matter + antimatter
@@ -95,16 +97,13 @@ np.putmask(asymmetry, mask2 , difference / sum)
 
 #print("asymmetry : ", asymmetry)
 print(asymmetry.shape, xedges.shape, yedges.shape)
-
-#asymmetry = np.rot90(asymmetry, k=1, axes=(0, 1))
-#asymmetry = np.flipud(asymmetry)
-#print(asymmetry.shape, xedges.shape, yedges.shape)
+asymmetry = np.transpose(asymmetry)
 
 plt.figure(5)
-plt.errorbar(rolow,rohigh,linestyle = '', marker = '.', alpha = 1 ,markersize = 0.5, color = 'black')
-plt.errorbar(nrolow,nrohigh, linestyle = '', marker = '.', alpha = 1, markersize = 0.5, color = 'yellow')
-#plt.pcolor(xedges,yedges,asymmetry,cmap = 'seismic')
+plt.errorbar(rolow,rohigh,linestyle = '', marker = '.', alpha = 0.25,markersize = 0.5, color = 'black')
+plt.errorbar(nrolow,nrohigh, linestyle = '', marker = '.', alpha = 0.25, markersize = 0.5, color = 'yellow')
 plt.xlabel(r"$\rho_{low}$ [$GeV^{2}]$")
 plt.ylabel(r"$\rho_{high}$ [$GeV^{2}$]")
-#plt.colorbar()
+plt.pcolormesh(xedges,yedges,asymmetry,cmap = 'seismic', edgecolors = 'k', linewidths = '0.5')
+plt.colorbar()
 plt.show()

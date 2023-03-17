@@ -61,25 +61,25 @@ int dalitz(){
 			.Filter("B_E  <= 1e6"); // ???
 
 	//Cuts and event selection
-	auto Pselect_up = rdfKinematicUp.Filter("H1_ProbPi <= 0.5")
-				.Filter("H2_ProbPi <= 0.5")
-				.Filter("H3_ProbPi <= 0.5")
+	auto Pselect_up = rdfKinematicUp.Filter("H1_ProbPi <= 0.6")
+				.Filter("H2_ProbPi <= 0.6")
+				.Filter("H3_ProbPi <= 0.6")
 				.Filter("H1_ProbK >= 0.5")
 				.Filter("H2_ProbK >= 0.5")
 				.Filter("H3_ProbK >= 0.5");
 
-	auto Pselect_down =  rdfKinematicDown.Filter("H1_ProbPi <= 0.5")
-				.Filter("H2_ProbPi <= 0.5")
-				.Filter("H3_ProbPi <= 0.5")
+	auto Pselect_down =  rdfKinematicDown.Filter("H1_ProbPi <= 0.6")
+				.Filter("H2_ProbPi <= 0.6")
+				.Filter("H3_ProbPi <= 0.6")
 				.Filter("H1_ProbK >= 0.5")
 				.Filter("H2_ProbK >= 0.5")
 				.Filter("H3_ProbK >= 0.5");
 
-	auto mass_up_selection = Pselect_up.Filter("invMass <= 5279.15 + 150")
-				.Filter("invMass >= 5279.15 - 150")
+	auto mass_up_selection = Pselect_up.Filter("invMass <= 5279.15 + 200")
+				.Filter("invMass >= 5279.15 - 200")
 				.Define("Bcharge","H1_Charge + H2_Charge + H3_Charge");
-	auto mass_down_selection = Pselect_down.Filter("invMass <= 5279.15 + 150")
-				.Filter("invMass >= 5279.15 - 150")
+	auto mass_down_selection = Pselect_down.Filter("invMass <= 5279.15 + 200")
+				.Filter("invMass >= 5279.15 - 200")
 				.Define("Bcharge","H1_Charge + H2_Charge + H3_Charge");
 
 	//Define invariant masses
@@ -157,11 +157,11 @@ int dalitz(){
 	k->Divide(2,2,0.02,0.02);
 	k->Draw();
 	k->cd(1);
-	histDown->GetYaxis->SetTitle("counts for magnet DOWN");
+	histDown->GetYaxis()->SetTitle("counts for magnet DOWN");
 	histDown->SetLineColor(2);
 	histDown->DrawClone();
 	k->cd(2);
-	hist->GetYaxis->SetTitle("counts for magnet UP");
+	histUp->GetYaxis()->SetTitle("counts for magnet UP");
 	histUp->DrawClone();
 
 	auto c = new TCanvas("c","c",900,900);
