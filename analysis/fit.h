@@ -69,7 +69,7 @@ double model(double *x,double *par){
 	//exponential
 	double arg3 = 0;
 	arg3 = par[12]*TMath::Exp(-par[11]*xx);
-	std::cout << "arg3 : " << arg3 << " par[12] : " << par[12] << " par[11] : " << par[11] << " xx " << xx << " TMath::Exp(-par[11]*xx): "<< TMath::Exp(-par[11]*xx)  <<std::endl;
+	//std::cout << "arg3 : " << arg3 << " par[12] : " << par[12] << " par[11] : " << par[11] << " xx " << xx << " TMath::Exp(-par[11]*xx): "<< TMath::Exp(-par[11]*xx)  <<std::endl;
         return (arg + par[10]*arg1 +arg3);
 }
 

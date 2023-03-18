@@ -102,17 +102,33 @@ int globalAsymmetry(){
 	TF1 *func1 = new TF1("fit_Bmass", Cruijff,5000,5400,6);
 	TF1 *func2 = new TF1("4body",fourBodybackground,5039,5300,5);
 	TF1 *f = new TF1("Model",model,5000,6400,13);
+	TF1 *fexp = new TF1("fexp", "[0]*TMath::Exp(-[1]*(x-5000))",5038,6400);
+
+
 	//set the initial values
 	func1->SetParNames("sigma_L", "sigma_R", "mean", "alpha_L", "alpha_R", "Norm");
 	func2->SetParNames("m0","c","p","leftBoundary","Norm");
 	f->SetParNames("#sigma_{L}", "#sigma_{R}", "mean", "#alpha_{L}", "#alpha_{R}", "N_{Cruijff}","m_{0}","c","p","leftBoundary","N_{4b}");
+	f->SetParName(11,"#lambda");
+	f->SetParName(12,"N_{exp}");
 	f->SetLineStyle(1);
 	f->SetLineColor(kRed);
-	Double_t params[13] = {18.61,12.32,5288,0.0988,0.2111,1900,1.524e04,15.08,1.861e04,5008,0.6e-06,0.0006,50};
+	fexp->SetParNames("norm","lambda");
+	Double_t params[13] = 	{18.61,  //sigma_L
+				12.32,	 //sigma_R
+				5288,	 //mean
+				0.0988,	 //alpha_L
+				0.2111,	 //alpha_R
+				1900,	 //Normalization Cruijff
+				1.524e04,//m0
+				15.08,	 //c
+				1.861e04,//p
+				5008,	 //leftBoundary
+				0.6e-06, //Normalization 4b
+				0.0006,  //lambda
+				50};	 //Normalization exponential
 	f->SetParameters(params);
 
-	TF1 *fexp = new TF1("fexp", "[0]*TMath::Exp(-[1]*(x-5000))",5038,6400);
-	fexp->SetParNames("norm","lambda");
 
 	//Now remove the event above and below the invariant mass recostructed, and select B+ B-
 	//f->FixParameter();
@@ -128,8 +144,8 @@ int globalAsymmetry(){
 	gStyle->SetOptFit(1);
 
 	histUp->Fit("Model","","same",5035,6300);
-	histUp->DrawClone("same");
-	histUp->DrawClone("E1 X0 same");
+	//histUp->DrawClone("same");
+	histUp->DrawClone("E1 X0");
 
 	TF1 *fitUp = histUp->GetFunction("Model");
 
@@ -142,7 +158,7 @@ int globalAsymmetry(){
 	func1->SetParameters(p0,p1,p2,p3,p4,p5);
 	func1->SetLineColor(kBlue);
 	func1->SetLineStyle(2);
-	func1->Draw("same");
+	func1->DrawClone("same");
 
 	double p6 = fitUp->GetParameter(6);
 	double p7 = fitUp->GetParameter(7);
@@ -152,7 +168,7 @@ int globalAsymmetry(){
 	func2->SetParameters(p6,p7,p8,p9,p10);
 	func2->SetLineColor(kGreen);
 	func2->SetLineStyle(2);
-	func2->Draw("same");
+	func2->DrawClone("same");
 
 	double p11 = fitUp->GetParameter(11);
 	double p12 = fitUp->GetParameter(12);
@@ -160,28 +176,13 @@ int globalAsymmetry(){
 	fexp->SetLineColorAlpha(kOrange,1);
 	fexp->SetLineStyle(2);
 	fexp->DrawClone("same");
-	/*
-	func1->SetParameters(18.61,12.32,5288,0.0988,9.88345e-02,1900);
-        func1->SetLineColor(kBlue);
-        func1->SetLineStyle(1);
-        func1->DrawClone("same");
-	func2->SetParameters(1.524e04,15.08,1.861e04,5008,0.6e-06);
-        func2->SetLineColor(kGreen);
-        func2->SetLineStyle(1);
-        func2->DrawClone("same");
-	fexp->SetParameters(50,6.07721e-04);
-        fexp->SetLineColorAlpha(kBlack,1);
-        fexp->SetLineStyle(1);
-        fexp->DrawClone("same");*/
-	p->cd(2);
 
-	//Double_t params_dw[13] = {1.69715e+01, 1.60683e+01, 5.28488e+03, 1.12166e-01, 9.61372e-02, 2.70819e+03, 1.31128e+04, 1.53456e+01, 2.64010e+04, 5.03026e+03, 1.11330e-06, 50, 0.0006 };
-	//f->SetParameters(params_dw);
+	p->cd(2);
 	gStyle->SetOptStat(0);
 	gStyle->SetOptFit(1);
 	histDown->Fit("Model","","same",5035,6300);
-	histDown->DrawClone();
-	histDown->DrawClone("E1 X0 same");
+	//histDown->DrawClone();
+	histDown->DrawClone("E1 X0");
 	TF1 *fitDw = histDown->GetFunction("Model");
         double pp11 = fitDw->GetParameter(11);
         double pp12 = fitDw->GetParameter(12);
@@ -189,6 +190,27 @@ int globalAsymmetry(){
         fexp->SetLineColorAlpha(kOrange,1);
         fexp->SetLineStyle(2);
         fexp->DrawClone("same");
+
+	double pp0 = fitDw->GetParameter(0);
+        double pp1 = fitDw->GetParameter(1);
+        double pp2 = fitDw->GetParameter(2);
+        double pp3 = fitDw->GetParameter(3);
+        double pp4 = fitDw->GetParameter(4);
+        double pp5 = fitDw->GetParameter(5);
+        func1->SetParameters(pp0,pp1,pp2,pp3,pp4,pp5);
+        func1->SetLineColor(kBlue);
+        func1->SetLineStyle(2);
+        func1->DrawClone("same");
+
+        double pp6 = fitDw->GetParameter(6);
+        double pp7 = fitDw->GetParameter(7);
+        double pp8 = fitDw->GetParameter(8);
+        double pp9 = fitDw->GetParameter(9);
+        double pp10 = fitDw->GetParameter(10);
+        func2->SetParameters(pp6,pp7,pp8,pp9,pp10);
+        func2->SetLineColor(kGreen);
+        func2->SetLineStyle(2);
+        func2->DrawClone("same");
 
 
 	double mesonBmass = 5279.15; // MeV/c^2
