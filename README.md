@@ -13,8 +13,8 @@ Briefly an explanation of the project:
  - in 2dPlot.py we study the local CP asymmetry and pcolor map is generated. The axis are the M_low and M_high invariant masses and for each bin the asymmetry between B+/B- deacy is computed. 
 
 
-	[x] finire alla massa dei candidati B+/- (Crystal Ball function)
-	[x] capire se le masse invarianti calcolate sono giuste o sbagliate
-	[x] capire come funziona la color map di matplotlib
-	[ ] organizzare la search per ottimizzare i tagli (probK and probPi)
+[x] finire alla massa dei candidati B+/- (Crystal Ball function)
+[x] capire se le masse invarianti calcolate sono giuste o sbagliate
+[x] capire come funziona la color map di matplotlib
+[ ] organizzare la search per ottimizzare i tagli (probK and probPi)
 
