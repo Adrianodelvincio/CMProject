@@ -47,21 +47,26 @@ int globalAsymmetry(){
 	auto downKaon1 = rdf_up.Histo1D({"Pion","Prob. is pion",128u,0.,1.},"H1_ProbPi");
 	auto downKaon2 = rdf_up.Histo1D({"Pion","Prob. is pion",128u,0.,1.},"H2_ProbPi");
 	auto downKaon3 = rdf_up.Histo1D({"Pion","Prob. is pion",128u,0.,1.},"H3_ProbPi");
-	/*
+
+	auto Kaon1 = rdf_up.Histo1D({"Kaon","Prob. is K",128u,0.,1.},"H1_ProbK");
+	auto Kaon2 = rdf_up.Histo1D({"Kaon","Prob. is K",128u,0.,1.},"H2_ProbK");
+	auto Kaon3 = rdf_up.Histo1D({"Kaon","Prob. is K",128u,0.,1.},"H3_ProbK");
+
 	auto b = new TCanvas("b", "b", 900, 900);
 	auto d = new TPad("d","d",0,0,1,1);
-	d->Draw();
 
-	d->Divide(2,2,0.01,0.01);
+	d->Divide(2,1,0.01,0.01);
+	d->Draw();
 	d->cd(1);
 	upKaon1->DrawClone("PLC");
-	upKaon2->DrawClone("same PLC");
-	upKaon3->DrawClone("same PLC");
+	//upKaon2->DrawClone("same PLC");
+	//upKaon3->DrawClone("same PLC");
 	d->cd(2);
-	downKaon1->DrawClone("PLC");
-	downKaon2->DrawClone("same PLC");
-	downKaon3->DrawClone("same PLC");
-	*/
+	Kaon1->DrawClone("PLC");
+	//downKaon1->DrawClone("PLC");
+	//downKaon2->DrawClone("same PLC");
+	//downKaon3->DrawClone("same PLC");
+
 
 	//Now select the kaon event and plot invariant mass after the selection
 	auto selectUp = rdf_up.Filter("H1_ProbPi <= 0.5")
@@ -215,8 +220,8 @@ int globalAsymmetry(){
 
 	double mesonBmass = 5279.15; // MeV/c^2
 
-	auto mass_up_selection = selectUp.Filter("invMass <= 5279.15 + 100")
-				.Filter("invMass >= 5279.15 - 100")
+	auto mass_up_selection = selectUp.Filter("invMass <= 5347")
+				.Filter("invMass >= 5223")
 				.Define("Bcharge","(H1_Charge + H2_Charge + H3_Charge)");
 	auto mass_down_selection = selectDown.Filter("invMass <= 5279.15 + 100")
 				.Filter("invMass >= 5279.15 - 100")
@@ -252,7 +257,5 @@ int globalAsymmetry(){
 	std::cout << "- - -" << std::endl;
 	std::cout << "Asymmetry for MAGNET UP: " << asymmetry1 << " +/- " << sigmaUp << std::endl;
 	std::cout << "Asymmetry for MAGNET DOWN: " << asymmetry2 << " +/- " << sigmaDown <<std::endl;
-
-	//Now compute the uncertainty of the asymmetry
 	return 0;
 }

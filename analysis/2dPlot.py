@@ -88,15 +88,10 @@ sum = matter + antimatter
 difference = antimatter - matter
 mask = (sum == 0)
 mask2 = (sum != 0)
-#print("sum equal to 0 : " , sum[mask])
-#print("mask : ", mask)
 
 #mask 2d arrays
 asymmetry[mask] = 0
 np.putmask(asymmetry, mask2 , difference / sum)
-
-#print("asymmetry : ", asymmetry)
-print(asymmetry.shape, xedges.shape, yedges.shape)
 asymmetry = np.transpose(asymmetry)
 
 plt.figure(5)
@@ -105,5 +100,23 @@ plt.errorbar(nrolow,nrohigh, linestyle = '', marker = '.', alpha = 0.25, markers
 plt.xlabel(r"$\rho_{low}$ [$GeV^{2}]$")
 plt.ylabel(r"$\rho_{high}$ [$GeV^{2}$]")
 plt.pcolormesh(xedges,yedges,asymmetry,cmap = 'seismic', edgecolors = 'k', linewidths = '0.5')
+plt.colorbar()
+
+plt.figure(6)
+plt.title("Error")
+plt.xlabel(r"$\rho_{low}$ [$GeV^{2}]$")
+plt.ylabel(r"$\rho_{high}$ [$GeV^{2}$]")
+
+error = np.zeros(asymmetry.shape)
+np.putmask(error, mask2.transpose() , np.sqrt((1 - asymmetry**2)/(sum.transpose())))
+std_distance = np.zeros(asymmetry.shape)
+np.putmask(std_distance, mask2.transpose(), np.abs(asymmetry/error))
+#std_distance = np.transpose(std_distance)
+plt.pcolormesh(xedges,yedges,error,cmap = 'seismic', edgecolors = 'k', linewidths = '0.5')
+plt.colorbar()
+
+plt.figure(7)
+plt.title("Significance")
+plt.pcolormesh(xedges,yedges,std_distance,cmap = 'seismic', edgecolors = 'k', linewidths = '0.5')
 plt.colorbar()
 plt.show()

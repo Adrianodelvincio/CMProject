@@ -74,5 +74,3 @@ double model(double *x,double *par){
 }
 
 #endif
-
-
