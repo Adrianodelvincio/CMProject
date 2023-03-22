@@ -255,16 +255,16 @@ int dalitz(){
 
 	//ordering the masses of the two resonances
 
-	auto ordered_up = dalitz_up.Filter("(m13 > 3474496 + 10000) || (m13 < 3474496 - 10000)")
-				.Filter("(m23 > 3474496 + 10000) || (m23 < 3474496 - 10000)")
-				.Filter("(m13 > 11600000 + 10000) || (m13 < 11600000 - 10000)")
-				.Filter("(m23 > 11600000 + 10000) || (m23 < 11600000 - 10000)")
+	auto ordered_up = dalitz_up.Filter("(m13 > 3474496 + 100000) || (m13 < 3474496 - 100000)")
+				.Filter("(m23 > 3474496 + 100000) || (m23 < 3474496 - 100000)")
+				.Filter("(m13 > 11600000 + 100000) || (m13 < 11600000 - 100000)")
+				.Filter("(m23 > 11600000 + 100000) || (m23 < 11600000 - 100000)")
 				.Define("roLow" , "std::min(m23,m13)")
 				.Define("roHigh", "std::max(m23,m13)");
 	auto ordered_down = dalitz_down.Filter("(m13 > 3474496 + 1000) || (m13 < 3474496 - 1000)")
-				.Filter("(m23 > 3474496 + 10000) || (m23 < 3474496 - 10000)")
-				.Filter("(m13 > 11500000 + 10000) || (m13 < 11500000 - 10000)")
-				.Filter("(m23 > 11500000 + 10000) || (m23 < 11500000 - 10000)")
+				.Filter("(m23 > 3474496 + 100000) || (m23 < 3474496 - 100000)")
+				.Filter("(m13 > 11600000 + 100000) || (m13 < 11600000 - 100000)")
+				.Filter("(m23 > 11600000 + 100000) || (m23 < 11600000 - 100000)")
 				.Define("roLow" , "std::min(m23,m13)")
 				.Define("roHigh", "std::max(m23,m13)");
 
@@ -332,11 +332,11 @@ int dalitz(){
 	legend2->Draw();
 
 	h->cd(3);
-	ordGraph_up->SetTitle(" Orderer dalitz k- k+ k+ magnet UP; invariant K+K- (Low); K+K- (High) ");
+	ordGraph_up->SetTitle(" Orderer dalitz magnet UP; invariant K+K- (Low); K+K- (High) ");
 	ordGraph_up->DrawClone("AP");
 	ordGraph_down->DrawClone("P");
 	h->cd(4);
-	ordGraph_negup->SetTitle(" Orderer dalitz k- k+ k+ magnet Down; invariant K+K-(Low); K+K- (High) ");
+	ordGraph_negup->SetTitle(" Orderer dalitz magnet Down; invariant K+K-(Low); K+K- (High) ");
 	ordGraph_negup->DrawClone("AP");
 	ordGraph_negDown->DrawClone("P");
 

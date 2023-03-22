@@ -75,7 +75,7 @@ plt.colorbar()
 
 plt.figure(3)
 plt.errorbar(rolow,rohigh,linestyle = '', marker = '.', markersize = 0.5, color = "black")
-plt.errorbar(nrolow,nrohigh, linestyle = '', marker = '.', markersize = 0.5, color = "yellow")
+plt.errorbar(nrolow,nrohigh, linestyle = '', marker = '.', markersize = 0.5, color = "blue")
 
 plt.figure(4)
 plt.title(r"$\rho_{low}$")
