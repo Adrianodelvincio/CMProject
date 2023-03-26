@@ -19,8 +19,9 @@ Briefly an explanation of the project:
  - in 2dPlot.py we study the local CP asymmetry and a color map is generated. The axis are the M_low and M_high invariant masses and for each bin the asymmetry between B+/B- deacy is computed. Also the statistical significance.
 
 
-To Run the code, you can use the following command in the directory of the project : root analysis/scriptname -l
-The analysis follow this order:
+To Run the code, you can use the following command in the directory of the project :
+root analysis/scriptname -l;  The analysis follow this order:
+
  - display.cpp (To visualize the data)
  - invmass.cpp
  - globalAsymmetry.cpp

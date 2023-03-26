@@ -48,6 +48,7 @@ int dalitz(){
 			.Filter("H1_E <= 1e6 && H2_E <= 1e6 && H3_E <= 1e6")
 			.Filter("!H1_isMuon && !H2_isMuon && !H3_isMuon")
 			.Filter("B_E  <= 1e6");
+	
 	auto rdfKinematicDown = rdf_down.Define("invMass", invMass, {"H1_PX","H1_PY","H1_PZ","H2_PX","H2_PY","H2_PZ","H3_PX","H3_PY","H3_PZ"})
 			.Define("H1_E",energyKaon, {"H1_PX","H1_PY","H1_PZ"})
 			.Define("H2_E",energyKaon, {"H2_PX","H2_PY","H2_PZ"})
@@ -59,6 +60,7 @@ int dalitz(){
 			.Filter("!H1_isMuon && !H2_isMuon && !H3_isMuon")
 			.Filter("H1_E <= 1e6 && H2_E <= 1e6 && H2_E <= 1e6")
 			.Filter("B_E  <= 1e6");
+	
 	//Cuts and event selection
 	auto Pselect_up = rdfKinematicUp.Filter("H1_ProbPi <= 0.6")
 				.Filter("H2_ProbPi <= 0.6")
@@ -77,8 +79,8 @@ int dalitz(){
 	auto mass_up_selection = Pselect_up.Filter("invMass <= 5347")
 				.Filter("invMass >= 5223")
 				.Define("Bcharge","H1_Charge + H2_Charge + H3_Charge");
-	auto mass_down_selection = Pselect_down.Filter("invMass <= 5279.15 + 200")
-				.Filter("invMass >= 5279.15 - 200")
+	auto mass_down_selection = Pselect_down.Filter("invMass <= 5347")
+				.Filter("invMass >= 5223")
 				.Define("Bcharge","H1_Charge + H2_Charge + H3_Charge");
 
 	//Define invariant masses
@@ -120,9 +122,6 @@ int dalitz(){
         auto M13M23_down = dalitz_down.Filter("Bcharge == 1").Filter("H1_Charge == -1").Graph("m13","m23");
 	auto M13M23_up_neg = dalitz_up.Filter("Bcharge == -1").Graph("m13","m23");
         auto M13M23_down_neg = dalitz_down.Filter("Bcharge == -1").Graph("m13","m23");
-
-	//dalitz_up.Display({"H1_Charge", "H2_Charge","H3_Charge","Bcharge"},5,10)->Print();
-	//dalitz_down.Display({"H1_Charge", "H2_Charge","H3_Charge","Bcharge"},5,10)->Print();
 
 	//B- -> K+K-K-
 	auto hist_m12_up_neg = dalitz_up.Filter("Bcharge == -1").Histo1D({"hist_m12_up_neg","K^{-}K^{-}", 128u, 50e3, 30e6},"m12");

@@ -14,7 +14,7 @@ int display(){
 	auto colNames =  rdf_up.GetColumnNames();
 	for (auto &&colname : colNames) std::cout << colname << std::endl;
 
-	//look at the histogram
+	//Histogram of PX,PY
 	auto h_upx = rdf_up.Histo1D({"h_upx","First particle px",64u,-range,range},"H1_PX");
 	auto h_upy = rdf_up.Histo1D({"h_upy","First particle py",64u,-100.,100.},"H1_PY");
 	auto h_downy = rdf_down.Histo1D({"h_downy","First particle py",64u,-100.,100.},"H1_PY");
@@ -43,10 +43,9 @@ int display(){
 	auto BselectionUp = rdf_up.Define("Bcharge","(H1_Charge + H2_Charge + H3_Charge)");
 	auto BselectionDown = rdf_down.Define("Bcharge","(H1_Charge + H2_Charge + H3_Charge)");
 
-	BselectionUp.Display({"H1_Charge", "H2_Charge","H3_Charge", "Bcharge"},25,10)->Print();
-        BselectionDown.Display({"H1_Charge", "H2_Charge","H3_Charge","Bcharge"},25,10)->Print();
-
-
+	BselectionUp.Display({"H1_Charge", "H2_Charge","H3_Charge","Bcharge"},5,10)->Print();
+	BselectionDown.Display({"H1_Charge", "H2_Charge","H3_Charge","Bcharge"},5,10)->Print();
+	
 	//look at the histogram
 	auto h1_upx = rdf_up.Histo1D({"h_upx","First particle px",64u,-range,range},"H2_PX");
 	auto h1_upy = rdf_up.Histo1D({"h_upy","First particle py",64u,-100.,100.},"H2_PY");
