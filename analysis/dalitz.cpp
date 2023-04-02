@@ -63,15 +63,15 @@ int dalitz(){
 	
 	//Cuts and event selection
 	auto Pselect_up = rdfKinematicUp.Filter("H1_ProbPi <= 0.6")
-				.Filter("H2_ProbPi <= 0.6")
-				.Filter("H3_ProbPi <= 0.6")
+				.Filter("H2_ProbPi <= 0.5")
+				.Filter("H3_ProbPi <= 0.5")
 				.Filter("H1_ProbK >= 0.5")
 				.Filter("H2_ProbK >= 0.5")
 				.Filter("H3_ProbK >= 0.5");
 
 	auto Pselect_down =  rdfKinematicDown.Filter("H1_ProbPi <= 0.6")
-				.Filter("H2_ProbPi <= 0.6")
-				.Filter("H3_ProbPi <= 0.6")
+				.Filter("H2_ProbPi <= 0.5")
+				.Filter("H3_ProbPi <= 0.5")
 				.Filter("H1_ProbK >= 0.5")
 				.Filter("H2_ProbK >= 0.5")
 				.Filter("H3_ProbK >= 0.5");

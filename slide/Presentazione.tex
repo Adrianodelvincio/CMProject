@@ -2,6 +2,7 @@
 %\usepackage[utf8]{inputenc}
 \usepackage[output-decimal-marker={,}]{siunitx}
 \usepackage[compat=1.1.0]{tikz-feynman}
+\usepackage{wrapfig}
 \author{Adriano Del Vincio, (562946)}
 \title{Measure of CP violation in B+/- meson}
 \usetheme{Madrid}
@@ -32,7 +33,6 @@ A_{CP}(B^{\pm} \rightarrow f^{\pm}) = \dfrac{\Gamma(B^{+} \rightarrow f^{+}) - \
 \end{frame}
 
 \begin{frame}{Compute the invariant mass}
-
 Per ricostruire il decadimento, è necessario calcolare la massa invariante dei mesoni $B$, a partire dalle impulso dei $3K$. La massa invariante è calcolata nello script \texttt{invmass.cpp}, utilizzando la funzione inline \textit{invMass}. Nella funzione si è esplicitato il modulo quadro del quadrimpulso totale:
 
 \begin{align*}
@@ -45,8 +45,76 @@ P_{tot}^{\mu}P_{tot,\mu} = (k_{1} + k_{2} + k_{3})^{2}
 \end{figure}
 
 Per il calcolo, si è sfruttato la classe \texttt{ROOT::Math::LorentzVector}, che ha già implementato al suo interno i metodi per calcolare la massa invariante di un quadrivettore.
+\end{frame}
+
+\begin{frame}{DataSelection}
+
+Sono definite anche altre quantità importanti, come energia, impulso del candidato $B$ a partire dall'energia e impulso dei kaoni. Si filtrano quegli eventi in cui una o più delle particelle è identificata come un muone. Infine si calcola la carica del candidato $B$
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width = \textwidth]{../rdf.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}{DataSelection}
+
+Nello script \texttt{globalAsymmetry.cpp} si effettuano ulteriori tagli riguardanti l'identificazione delle particelle. Si escludono quelle particelle che hanno probabilità $> 50 \%$ di essere Pioni (che sono interessanti per un altro canale di decadimento) e si selezionano solo le particelle che hanno probabilità $> 50 \%$ di essere kaoni.
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width = 0.9\textwidth]{../Probabilities.pdf}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Fit mass B candidates}
+
+Nello stesso script \texttt{globalAsymmetry.cpp} si effettua il fit alla massa invariante dei candidati $B$. Per Modellizzare il segnale si utilizza si utilizza la Cruijff function, una gaussiana asimmetrica nelle code, per tenere in conto dei fotoni emessi ISR e FSR. Il fondo è modellizzato dalla somma di un'esponenziale e da un'ARGUS function, che descrive il caso del decadimento in 4 corpi, di cui solo 3 sono effettivamente "visti" dai detector.
+
+\begin{equation}
+Argus(m,m_{0},c,p) = N \cdot m \cdot \Bigl[1 - \big(\frac{m}{m_{0}} \big)^{2} \Bigl]^{p} \cdot exp \Bigl[c \cdot \big(1 - (\frac{m}{m_{0}}\big)^{2}  \Bigl]
+\end{equation}
+\begin{equation}
+Signal(N,\mu, \sigma_{L,R}, \alpha_{R,L}) = N \cdot exp \Bigl[  \dfrac{ - (x - \mu)^2}{2 \sigma_{L,R}^{2} + \alpha_{L,R} (x - \mu)^2  }	\Bigl]
+\end{equation}
 
 \end{frame}
 
+\begin{frame}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width = \textwidth]{../Invariant_Mass_Fit.pdf}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\begin{columns}
+\column{0.6\textwidth}
+\centering
+Dal fit si ricavano i parametri che descrivono il segnale ed il fondo. Per eliminare gli eventi di fondo si è quindi selezionato un intervallo intorno al picco della massa invariante. Gli estremi dell'intervallo sono stati calcolati in \texttt{optimalCut.py}.
+Massimizzando il rapporto tra segnale e rumore:
+
+\begin{align*}
+\dfrac{S(x,y)}{\sqrt{S(x,y)+B(x,y)}}
+\end{align*}
+
+Il codice calcola il numero aspettato di eventi di segnale e di fondo per una data coppia di punti (x,y). Alla fine si selezionano i valori che massimizzano la funzione sopra. 
+\column{0.4\textwidth}
+\begin{figure}
+\includegraphics[width=0.6\textwidth]{../OptimalCut.pdf}
+\caption{Frequency versus Voltage}
+\end{figure}
+\end{columns}
+
+
+
+
+
+
+
+
+
+\end{frame}
 
 \end{document}
