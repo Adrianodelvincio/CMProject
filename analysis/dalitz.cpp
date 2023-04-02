@@ -34,7 +34,7 @@ int dalitz(){
 		ROOT::Math::PxPyPzEVector k(kx,ky,kz,kE);
 		ROOT::Math::PxPyPzEVector b(bx,by,bz,bE);
 		auto c = b - k;
-	return (b-k).M2();};
+	return c.M2();};
 
 	//Define Energy of Kaons, momenta and Energy of meson B+/-
 	auto rdfKinematicUp = rdf_up.Define("invMass", invMass, {"H1_PX","H1_PY","H1_PZ","H2_PX","H2_PY","H2_PZ","H3_PX","H3_PY","H3_PZ"})
