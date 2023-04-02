@@ -4,7 +4,7 @@
 \usepackage[compat=1.1.0]{tikz-feynman}
 \usepackage{wrapfig}
 \author{Adriano Del Vincio, (562946)}
-\title{Measure of CP violation in B+/- meson}
+\title{Measure of CP violation in B meson}
 \usetheme{Madrid}
 
 \begin{document}
@@ -80,7 +80,7 @@ Signal(N,\mu, \sigma_{L,R}, \alpha_{R,L}) = N \cdot exp \Bigl[  \dfrac{ - (x - \
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}{Fit mass B candidates}
 
 \begin{figure}[hbtp]
 \centering
@@ -106,15 +106,47 @@ Il codice calcola il numero aspettato di eventi di segnale e di fondo per una da
 \caption{Frequency versus Voltage}
 \end{figure}
 \end{columns}
+\end{frame}
 
+\begin{frame}
 
+Effettuate le selezioni, si costruisce il Dalitz Plot. I Dalitz plots sono creati tramite \texttt{dalitz.cpp}. Il codice calcola le masse invarianti di ogni coppia di kaoni. Le masse invarianti sono calcolate e tramite la funzione 
 
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width = 0.8\textwidth]{../twobody.png}
+\end{figure}
+A questo punto si plottano le masse invarianti: 
 
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width = 0.5\textwidth]{../Dalitz2.pdf}
+\caption{Masse invarianti dei Kaoni}
+\end{figure}
+\end{frame}
 
+\begin{frame}{Asimmetria locale materia/antimateria}
 
-
-
+A questo punto è utile ordinare le masse delle particelle in $m_{low}$ ed $m_{high}$, qui si può confrontare le asimmetrie tra materia/antimateria. 
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width = 0.6\textwidth]{../Ordered_Dalitz.pdf}
+\caption{Ordered Dalitz plot.}
+\end{figure}
 
 \end{frame}
+
+\begin{frame}
+L'asimmetria può essere studiata localmente, nel dalitz plot, eseguendo un binning e calcolando per ogni bin $A_{CP}$. Questo viene eseguito dallo script \texttt{2dPlot.py }
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width = 0.4\textwidth]{../local_asymmetry.pdf}
+\includegraphics[width = 0.4\textwidth]{../Significance.pdf} 
+\caption{Local asymmetry on the left, significance (asymmetry divided by the error) on the right}\label{fig:Significance}
+\end{figure}
+
+\end{frame}
+
 
 \end{document}

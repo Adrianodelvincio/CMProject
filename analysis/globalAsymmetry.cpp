@@ -84,15 +84,15 @@ int globalAsymmetry(){
 	.Filter("H3_ProbK >= 0.5");
 
 	auto selectUp1 = rdf_up.Filter("H1_ProbPi <= 0.2")
-	.Filter("H2_ProbPi <= 0.2")
-	.Filter("H3_ProbPi <= 0.2")
+	.Filter("H2_ProbPi <= 0.5")
+	.Filter("H3_ProbPi <= 0.5")
 	.Filter("H1_ProbK >= 0.5")
 	.Filter("H2_ProbK >= 0.5")
 	.Filter("H3_ProbK >= 0.5");
 
 	auto selectDown1 =  rdf_down.Filter("H1_ProbPi <= 0.2")
-	.Filter("H2_ProbPi <= 0.2")
-	.Filter("H3_ProbPi <= 0.2")
+	.Filter("H2_ProbPi <= 0.5")
+	.Filter("H3_ProbPi <= 0.5")
 	.Filter("H1_ProbK >= 0.5")
 	.Filter("H2_ProbK >= 0.5")
 	.Filter("H3_ProbK >= 0.5");
