@@ -44,7 +44,7 @@ int invmass(){
 			.Define("B_E","H1_E + H2_E + H3_E")
 			.Filter("H1_E <= 1e6 && H2_E <= 1e6 && H3_E <= 1e6")
 			.Filter("!H1_isMuon && !H2_isMuon && !H3_isMuon")
-			.Filter("B_E  <= 1e6"); // ???
+			.Filter("B_E  <= 1e6");
 
 	auto rdf_down1 = rdf_down.Define("invMass", invMass, {"H1_PX","H1_PY","H1_PZ","H2_PX","H2_PY","H2_PZ","H3_PX","H3_PY","H3_PZ"})
 			.Define("H1_E",energyKaon, {"H1_PX","H1_PY","H1_PZ"})
@@ -56,7 +56,7 @@ int invmass(){
 			.Define("B_E","H1_E + H2_E + H3_E")
 			.Filter("!H1_isMuon && !H2_isMuon && !H3_isMuon")
 			.Filter("H1_E <= 1e6 && H2_E <= 1e6 && H2_E <= 1e6")
-			.Filter("B_E  <= 1e6"); // ???
+			.Filter("B_E  <= 1e6");
 
 	auto Bselection_up = rdf_up1.Define("MassB",invB, {"B_PX","B_PY","B_PZ","B_E"});
 	auto Bselection_down = rdf_down1.Define("MassB",invB, {"B_PX","B_PY","B_PZ","B_E"});

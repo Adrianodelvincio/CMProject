@@ -12,8 +12,7 @@ y = np.linspace(1,300.,50)
 x = Bmass - x
 y = Bmass + y
 
-#ROOT.fourBodybackground
-#ROOT.Cruijff
+
 cpp_code = """
 // Function definition
 double fexp(double *x, double *par ) { return par[0]*TMath::Exp(-par[1]*(x[0]-5000)); }
@@ -35,8 +34,6 @@ def Integral(x,y, n = 1000):
 	signal = np.sum(signal)*interval_width
 	combinatorial = np.sum(combinatorial)*interval_width
 	fourbody = np.sum(fourbody)*interval_width
-	#print("interval (%f,%f)" % (x,y), " interval width %f" % interval_width)
-	#print(signal,fourbody,combinatorial)
 	return signal, fourbody, combinatorial
 
 

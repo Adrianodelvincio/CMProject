@@ -1,0 +1,52 @@
+\documentclass[8pt,a4paper]{beamer}
+%\usepackage[utf8]{inputenc}
+\usepackage[output-decimal-marker={,}]{siunitx}
+\usepackage[compat=1.1.0]{tikz-feynman}
+\author{Adriano Del Vincio, (562946)}
+\title{Measure of CP violation in B+/- meson}
+\usetheme{Madrid}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Fisica del processo}
+\framesubtitle{Studio dell'asimmetria CP nel decadimento in $3$ kaoni dei Mesono $B\pm$}
+
+Lo studio dell'asimmetria $CP$ rappresenta una delle maggiori aree di indagine nella fisica delle alte energie. Diverse collaborazioni in passato (\textit{BaBar} presso lo SLAC, \textit{Belle} presso KEK) hanno misurato l'asimmetria nel comportamento tra materia/antimateria in differenti canali di decadimento, come i mesoni $B_{0}$ e $\overline{B_{0}}$. In questo progetto si è analizzato il decadimento dei mesoni carichi in  $3 K$, utilizzando dati collezionati a LHCb nel 2011.
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[scale=0.5]{../Decay.pdf}
+\caption{Decadimento del mesone $B+$ in tre kaoni, l'asimmetria è dovuta al cambiamento di flavour del quark $b$}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Dataset}
+I dati a disposizione sono suddivisi in due TTree, che differiscono per l'orientazione del campo magnetico nell'esperimento, e sono analizzati separatamente. I due File contengono 25 variabili che descrivono la cinematica del processo.
+I dati sono analizzati principalmente con \textit{RDataFrame}. L'analisi consiste nel selezionare gli eventi che provengono dal decadimento di interesse, rigettango eventi di fondo o le particelle che non possono essere identificate come Kaoni. Una volta selezionati gli eventi, si genera il Dalitz plot del decadimento e si rimuovono le risonanze che non sono di interesse. L'obiettivo dell'analisi è quello di ottenere una misura dell'asimmetria tra materia/antimateria nel decadimento, formalmente definita come:
+
+\begin{equation}
+A_{CP}(B^{\pm} \rightarrow f^{\pm}) = \dfrac{\Gamma(B^{+} \rightarrow f^{+}) - \Gamma(B^{-} \rightarrow f^{-})}{ \Gamma(B^{+} \rightarrow f^{+}) + \Gamma(B^{-} \rightarrow f^{-})}
+\end{equation}
+\end{frame}
+
+\begin{frame}{Compute the invariant mass}
+
+Per ricostruire il decadimento, è necessario calcolare la massa invariante dei mesoni $B$, a partire dalle impulso dei $3K$. La massa invariante è calcolata nello script \texttt{invmass.cpp}, utilizzando la funzione inline \textit{invMass}. Nella funzione si è esplicitato il modulo quadro del quadrimpulso totale:
+
+\begin{align*}
+P_{tot}^{\mu}P_{tot,\mu} = (k_{1} + k_{2} + k_{3})^{2}
+\end{align*}
+
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width = \textwidth]{../Schermata del 2023-04-02 18-06-14.png}
+\end{figure}
+
+Per il calcolo, si è sfruttato la classe \texttt{ROOT::Math::LorentzVector}, che ha già implementato al suo interno i metodi per calcolare la massa invariante di un quadrivettore.
+
+\end{frame}
+
+
+\end{document}

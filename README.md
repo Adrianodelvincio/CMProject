@@ -5,7 +5,7 @@ The analysis is developed using ROOT data Frame, so ROOT is required to run the 
 
 Briefly an explanation of the project:
 
- - In display.cc some Histogram are defined, for a first visualization of the Data. The data files contain 25 variables for the analysis divided in column, only 20 are analyzed. The Data can be loaded [here][https://opendata.cern.ch/record/4900]
+ - In display.cc some Histogram are defined, for a first visualization of the Data. The data files contain 25 variables for the analysis divided in column, only 20 are analyzed. The Data can be loaded [https://opendata.cern.ch/record/4900]
 
  - In invmass.cc the first analysis is performed: the invariant mass of the B+/- candidates is computed with the three kaons momenta and some histograms are filled. Then two new datafiles are created (processed_Up.root and processed_Down.root).
 
